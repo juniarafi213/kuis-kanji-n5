@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kuis Interaktif JLPT N5 (Bab 1–11) - Latihan Mandiri Murid</title>
+  <style>
+    :root {
+      --primary: #e63946;
+      --primary-dark: #c1121f;
+      --primary-light: #ffe5d9;
+      --secondary: #457b9d;
+      --bg: #f8f9fa;
+      --card-bg: #ffffff;
+      --text: #1d3557;
+      --text-muted: #6c757d;
+      --success: #2a9d8f;
+      --success-light: #e8f5e9;
+      --danger: #e76f51;
+      --danger-light: #fbe9e7;
+      --border: #e2e8f0;
+      --font-jp: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+    }
+
+    header {
+      width: 100%;
+      max-width: 760px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .badge-header {
+      display: inline-block;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    p.subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    /* Filter & Stats Bar */
+    .dashboard {
+      width: 100%;
+      max-width: 760px;
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 16px 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover {
+      background: #eaeef2;
+    }
+
+    .filter-btn.active {
+      background: var(--text);
+      color: #fff;
+      border-color: var(--text);
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      border-top: 1px dashed var(--border);
+      padding-top: 12px;
+    }
+
+    .stat-box {
+      text-align: center;
+      padding: 6px;
+      background: var(--bg);
+      border-radius: 10px;
+    }
+
+    .stat-val {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .stat-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    /* Quiz Card */
+    .quiz-card {
+      width: 100%;
+      max-width: 760px;
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      position: relative;
+    }
+
+    .quiz-tag-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .tag-category {
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .audio-btn {
+      background: #f1f5f9;
+      border: none;
+      cursor: pointer;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      transition: all 0.2s ease;
+    }
+
+    .audio-btn:hover {
+      background: #e2e8f0;
+      transform: scale(1.05);
+    }
+
+    .question-prompt {
+      text-align: center;
+      padding: 10px 0;
+    }
+
+    .question-prompt .sub-title {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .question-prompt .target-word {
+      font-family: var(--font-jp);
+      font-size: 3rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    /* Options grid */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    @media (min-width: 600px) {
+      .options-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .opt-btn {
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: left;
+      font-size: 1.05rem;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+    }
+
+    .opt-btn:hover:not(:disabled) {
+      border-color: var(--secondary);
+      background: #f8fafc;
+      transform: translateY(-2px);
+    }
+
+    .opt-idx {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #edf2f7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .opt-text {
+      font-weight: 600;
+      font-family: var(--font-jp);
+      font-size: 1.15rem;
+    }
+
+    /* State Answer classes */
+    .opt-btn.correct-choice {
+      border-color: var(--success);
+      background-color: var(--success-light);
+      color: #1b5e20;
+    }
+
+    .opt-btn.correct-choice .opt-idx {
+      background: var(--success);
+      color: #ffffff;
+    }
+
+    .opt-btn.wrong-choice {
+      border-color: var(--danger);
+      background-color: var(--danger-light);
+      color: #b71c1c;
+    }
+
+    .opt-btn.wrong-choice .opt-idx {
+      background: var(--danger);
+      color: #ffffff;
+    }
+
+    .opt-btn:disabled {
+      cursor: default;
+      transform: none;
+    }
+
+    /* Explanation Section */
+    .explanation-box {
+      display: none;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin-top: 10px;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .exp-title {
+      font-weight: 800;
+      font-size: 1.05rem;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .exp-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 0.95rem;
+    }
+
+    .exp-item {
+      padding: 10px 14px;
+      border-radius: 10px;
+      border-left: 4px solid var(--border);
+      background: #fff;
+    }
+
+    .exp-item.exp-correct {
+      border-left-color: var(--success);
+      background: #f0fdf4;
+    }
+
+    .exp-item.exp-wrong {
+      border-left-color: var(--danger);
+      background: #fef2f2;
+    }
+
+    .exp-word {
+      font-weight: 700;
+      font-family: var(--font-jp);
+      color: var(--text);
+    }
+
+    .exp-detail {
+      font-size: 0.9rem;
+      color: #475569;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    /* Next Button */
+    .action-bar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .next-btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 28px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(230, 57, 70, 0.3);
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .next-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    /* Floating Review Alert */
+    .review-banner {
+      display: none;
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeeba;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 24px 0 12px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <span class="badge-header">JLPT N5 • KANJI & KOSAKATA LENGKAP</span>
+    <h1>Latihan Soal Interaktif N5</h1>
+    <p class="subtitle">Mencakup semua kosakata & kanji Bab 1–11 (Endless Mode untuk pengulangan murid)</p>
+  </header>
+
+  <!-- Dashboard Filter & Statistik -->
+  <section class="dashboard">
+    <div class="filter-row">
+      <div class="filter-group">
+        <span style="font-size:0.85rem; font-weight:700; color:var(--text-muted);">Cakupan:</span>
+        <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">Semua (Bab 1–11)</button>
+        <button class="filter-btn" data-filter="1-6" onclick="setFilter('1-6', this)">Bab 1–6 (Dasar & Waktu)</button>
+        <button class="filter-btn" data-filter="6-11" onclick="setFilter('6-11', this)">Bab 6–11 (Verba & Sifat)</button>
+      </div>
+      <div>
+        <button class="filter-btn" id="retryWrongBtn" onclick="toggleWrongReviewMode(this)" style="display:none; color:var(--danger); border-color:var(--danger);">
+          Ulangi yang Salah (<span id="wrongCountBadge">0</span>)
+        </button>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="stat-val" id="totalCount">0</div>
+        <div class="stat-label">Soal Terjawab</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" style="color:var(--success);" id="correctCount">0</div>
+        <div class="stat-label">Benar</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" style="color:var(--danger);" id="wrongCount">0</div>
+        <div class="stat-label">Salah</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" style="color:#d97706;" id="streakCount">0 🔥</div>
+        <div class="stat-label">Current Streak</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Kartu Kuis Utama -->
+  <main class="quiz-card">
+    <div id="reviewBanner" class="review-banner">
+      Mode Pengulangan: Mengulang kosakata yang sebelumnya dijawab salah.
+    </div>
+
+    <div class="quiz-tag-row">
+      <span class="tag-category" id="itemCategory">Kategori: Kata Kerja</span>
+      <button class="audio-btn" id="speakBtn" title="Dengarkan Pengucapan" onclick="playAudio()">
+        🔊
+      </button>
+    </div>
+
+    <div class="question-prompt">
+      <div class="sub-title" id="questionInstruction">Bagaimana cara membaca kanji berikut?</div>
+      <div class="target-word" id="promptText">牛肉</div>
+    </div>
+
+    <div class="options-grid" id="optionsGrid">
+      <!-- 4 Pilihan Jawaban akan digenerate otomatis -->
+    </div>
+
+    <!-- Kotak Penjelasan Opsi -->
+    <div class="explanation-box" id="explanationBox">
+      <div class="exp-title" id="explanationStatus">
+        <!-- Status teks & ikon -->
+      </div>
+      <ul class="exp-list" id="explanationList">
+        <!-- Daftar alasan tiap opsi -->
+      </ul>
+      <div class="action-bar">
+        <button class="next-btn" id="nextQuestionBtn" onclick="nextQuestion()">
+          Soal Berikutnya ➜
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    Dibuat untuk bahan latihan mandiri murid • Soal tidak terbatas dan terus diacak
+  </footer>
+
+  <script>
+    /* =====================================================================
+       DATABASE KOSAKATA LENGKAP DARI KEDUA DOKUMEN (Bab 1–6 dan Bab 6–11)
+       ===================================================================== */
+    const VOCABULARY_DB = [
+      // --- DOKUMEN: 1-6 n5 - for merge.docx ---
+      { kanji: "山", reading: "やま", romaji: "yama", meaning: "Gunung", category: "Alam", bab: "1-6" },
+      { kanji: "川", reading: "かわ", romaji: "kawa", meaning: "Sungai", category: "Alam", bab: "1-6" },
+      { kanji: "田", reading: "た / だ", romaji: "ta / da", meaning: "Sawah", category: "Alam", bab: "1-6" },
+      { kanji: "日曜日", reading: "にちようび", romaji: "nichiyoubi", meaning: "Hari Minggu", category: "Hari & Waktu", bab: "1-6" },
+      { kanji: "月曜日", reading: "げつようび", romaji: "getsuyoubi", meaning: "Hari Senin", category: "Hari & Waktu", bab: "1-6" },
+      { kanji: "火曜日", reading: "かようび", romaji: "kayoubi", meaning: "Hari Selasa", category: "Hari & Waktu", bab: "1-6" },
+      { kanji: "水曜日", reading: "すいようび", romaji: "suiyoubi", meaning: "Hari Rabu", category: "Hari & Waktu", bab: "1-6" },
+      { kanji: "木曜日", reading: "もくようび", romaji: "mokuyoubi", meaning: "Hari Kamis", category: "Hari & Waktu", bab: "1-6" },
+      { kanji: "金曜日", reading: "きんようび", romaji: "kinyoubi", meaning: "Hari Jumat", category: "Hari & Waktu", bab: "1-6" },
+      { kanji: "土曜日", reading: "どようび", romaji: "doyoubi", meaning: "Hari Sabtu", category: "Hari & Waktu", bab: "1-6" },
+      { kanji: "一つ", reading: "ひとつ", romaji: "hitotsu", meaning: "Satu buah (benda)", category: "Satuan & Angka", bab: "1-6" },
+      { kanji: "二つ", reading: "ふたつ", romaji: "futatsu", meaning: "Dua buah (benda)", category: "Satuan & Angka", bab: "1-6" },
+      { kanji: "三つ", reading: "みっつ", romaji: "mittsu", meaning: "Tiga buah (benda)", category: "Satuan & Angka", bab: "1-6" },
+      { kanji: "四つ", reading: "よっつ", romaji: "yottsu", meaning: "Empat buah (benda)", category: "Satuan & Angka", bab: "1-6" },
+      { kanji: "五つ", reading: "いつつ", romaji: "itsutsu", meaning: "Lima buah (benda)", category: "Satuan & Angka", bab: "1-6" },
+      { kanji: "一日", reading: "ついたち", romaji: "tsuitachi", meaning: "Tanggal satu / 1 hari", category: "Tanggal & Kalender", bab: "1-6" },
+      { kanji: "二日", reading: "ふつか", romaji: "futsuka", meaning: "Tanggal dua / 2 hari", category: "Tanggal & Kalender", bab: "1-6" },
+      { kanji: "三日", reading: "みっか", romaji: "mikka", meaning: "Tanggal tiga / 3 hari", category: "Tanggal & Kalender", bab: "1-6" },
+      { kanji: "四日", reading: "よっか", romaji: "yokka", meaning: "Tanggal empat / 4 hari", category: "Tanggal & Kalender", bab: "1-6" },
+      { kanji: "五日", reading: "いつか", romaji: "itsuka", meaning: "Tanggal lima / 5 hari", category: "Tanggal & Kalender", bab: "1-6" },
+      { kanji: "十日", reading: "とおか", romaji: "tooka", meaning: "Tanggal sepuluh / 10 hari", category: "Tanggal & Kalender", bab: "1-6" },
+      { kanji: "二十日", reading: "はつか", romaji: "hatsuka", meaning: "Tanggal dua puluh / 20 hari", category: "Tanggal & Kalender", bab: "1-6" },
+      { kanji: "一万", reading: "いちまん", romaji: "ichiman", meaning: "Sepuluh ribu (10.000)", category: "Angka & Hitungan", bab: "1-6" },
+      { kanji: "円", reading: "えん", romaji: "en", meaning: "Yen (mata uang Jepang)", category: "Angka & Uang", bab: "1-6" },
+      { kanji: "年", reading: "とし / ねん", romaji: "toshi / nen", meaning: "Tahun", category: "Waktu", bab: "1-6" },
+      { kanji: "半", reading: "はん", romaji: "han", meaning: "Setengah / Lewat 30 menit", category: "Waktu", bab: "1-6" },
+      { kanji: "分", reading: "ふん / ぷん", romaji: "fun / pun", meaning: "Menit / Pembagian", category: "Waktu", bab: "1-6" },
+      { kanji: "上", reading: "うえ", romaji: "ue", meaning: "Atas", category: "Posisi & Arah", bab: "1-6" },
+      { kanji: "下", reading: "した", romaji: "shita", meaning: "Bawah", category: "Posisi & Arah", bab: "1-6" },
+      { kanji: "中", reading: "なか", romaji: "naka", meaning: "Dalam / Tengah", category: "Posisi & Arah", bab: "1-6" },
+      { kanji: "左", reading: "ひだり", romaji: "hidari", meaning: "Kiri", category: "Posisi & Arah", bab: "1-6" },
+      { kanji: "右", reading: "みぎ", romaji: "migi", meaning: "Kanan", category: "Posisi & Arah", bab: "1-6" },
+      { kanji: "東", reading: "ひがし", romaji: "higashi", meaning: "Timur", category: "Posisi & Arah", bab: "1-6" },
+      { kanji: "西", reading: "にし", romaji: "nishi", meaning: "Barat", category: "Posisi & Arah", bab: "1-6" },
+      { kanji: "南", reading: "みなみ", romaji: "minami", meaning: "Selatan", category: "Posisi & Arah", bab: "1-6" },
+      { kanji: "北", reading: "きた", romaji: "kita", meaning: "Utara", category: "Posisi & Arah", bab: "1-6" },
+      { kanji: "人", reading: "ひと / じん", romaji: "hito / jin", meaning: "Orang", category: "Manusia & Tubuh", bab: "1-6" },
+      { kanji: "子", reading: "こ", romaji: "ko", meaning: "Anak", category: "Manusia & Tubuh", bab: "1-6" },
+      { kanji: "目", reading: "め", romaji: "me", meaning: "Mata", category: "Manusia & Tubuh", bab: "1-6" },
+      { kanji: "口", reading: "くち", romaji: "kuchi", meaning: "Mulut", category: "Manusia & Tubuh", bab: "1-6" },
+      { kanji: "耳", reading: "みみ", romaji: "mimi", meaning: "Telinga", category: "Manusia & Tubuh", bab: "1-6" },
+      { kanji: "手", reading: "て", romaji: "te", meaning: "Tangan", category: "Manusia & Tubuh", bab: "1-6" },
+      { kanji: "足", reading: "あし", romaji: "ashi", meaning: "Kaki", category: "Manusia & Tubuh", bab: "1-6" },
+      { kanji: "力", reading: "ちから", romaji: "chikara", meaning: "Tenaga / Kekuatan", category: "Manusia & Tubuh", bab: "1-6" },
+      { kanji: "父", reading: "ちち", romaji: "chichi", meaning: "Ayah (keluarga sendiri)", category: "Keluarga", bab: "1-6" },
+      { kanji: "母", reading: "はは", romaji: "haha", meaning: "Ibu (keluarga sendiri)", category: "Keluarga", bab: "1-6" },
+      { kanji: "兄", reading: "あに", romaji: "ani", meaning: "Kakak laki-laki (sendiri)", category: "Keluarga", bab: "1-6" },
+      { kanji: "姉", reading: "あね", romaji: "ane", meaning: "Kakak perempuan (sendiri)", category: "Keluarga", bab: "1-6" },
+      { kanji: "弟", reading: "おとうと", romaji: "otouto", meaning: "Adik laki-laki", category: "Keluarga", bab: "1-6" },
+      { kanji: "妹", reading: "いもうと", romaji: "imouto", meaning: "Adik perempuan", category: "Keluarga", bab: "1-6" },
+      { kanji: "祖父", reading: "そふ", romaji: "sofu", meaning: "Kakek (sendiri)", category: "Keluarga", bab: "1-6" },
+      { kanji: "祖母", reading: "そぼ", romaji: "sobo", meaning: "Nenek (sendiri)", category: "Keluarga", bab: "1-6" },
+      { kanji: "先生", reading: "せんせい", romaji: "sensei", meaning: "Guru / Pengajar", category: "Sekolah & Profesi", bab: "1-6" },
+      { kanji: "学生", reading: "がくせい", romaji: "gakusei", meaning: "Pelajar / Mahasiswa", category: "Sekolah & Profesi", bab: "1-6" },
+      { kanji: "生徒", reading: "せいと", romaji: "seito", meaning: "Murid (sekolah dasar/menengah)", category: "Sekolah & Profesi", bab: "1-6" },
+      { kanji: "学校", reading: "がっこう", romaji: "gakkou", meaning: "Sekolah", category: "Sekolah & Tempat", bab: "1-6" },
+      { kanji: "大学", reading: "だいがく", romaji: "daigaku", meaning: "Universitas / Perguruan tinggi", category: "Sekolah & Tempat", bab: "1-6" },
+      { kanji: "友達", reading: "ともだち", romaji: "tomodachi", meaning: "Teman / Sahabat", category: "Sosial", bab: "1-6" },
+      { kanji: "本", reading: "ほん", romaji: "hon", meaning: "Buku", category: "Benda", bab: "1-6" },
+      { kanji: "毎朝", reading: "まいあさ", romaji: "maiasa", meaning: "Setiap pagi", category: "Waktu & Rutinitas", bab: "1-6" },
+      { kanji: "毎日", reading: "まいにち", romaji: "mainichi", meaning: "Setiap hari", category: "Waktu & Rutinitas", bab: "1-6" },
+
+      // --- DOKUMEN: 6-11 n5.docx ---
+      { kanji: "牛肉", reading: "ぎゅうにく", romaji: "gyuuniku", meaning: "Daging sapi", category: "Makanan & Minuman", bab: "6-11" },
+      { kanji: "牛乳", reading: "ぎゅうにゅう", romaji: "gyuunyuu", meaning: "Susu sapi", category: "Makanan & Minuman", bab: "6-11" },
+      { kanji: "魚", reading: "さかな", romaji: "sakana", meaning: "Ikan", category: "Makanan & Alam", bab: "6-11" },
+      { kanji: "雨", reading: "あめ", romaji: "ame", meaning: "Hujan", category: "Cuaca & Alam", bab: "6-11" },
+      { kanji: "天気", reading: "てんき", romaji: "tenki", meaning: "Cuaca", category: "Cuaca & Alam", bab: "6-11" },
+      { kanji: "車", reading: "くるま", romaji: "kuruma", meaning: "Mobil / Kendaraan roda empat", category: "Transportasi", bab: "6-11" },
+      { kanji: "電車", reading: "でんしゃ", romaji: "densha", meaning: "Kereta listrik", category: "Transportasi", bab: "6-11" },
+      { kanji: "門", reading: "もん", romaji: "mon", meaning: "Gerbang / Pintu gerbang", category: "Tempat & Bangunan", bab: "6-11" },
+      { kanji: "駅", reading: "えき", romaji: "eki", meaning: "Stasiun kereta", category: "Transportasi & Tempat", bab: "6-11" },
+      { kanji: "会社", reading: "かいしゃ", romaji: "kaisha", meaning: "Perusahaan / Kantor", category: "Tempat & Pekerjaan", bab: "6-11" },
+      { kanji: "空港", reading: "くうこう", romaji: "kuukou", meaning: "Bandara / Bandara udara", category: "Transportasi & Tempat", bab: "6-11" },
+      { kanji: "時間", reading: "じかん", romaji: "jikan", meaning: "Waktu / Durasi jam", category: "Waktu", bab: "6-11" },
+      { kanji: "午前", reading: "ごぜん", romaji: "gozen", meaning: "Sebelum siang / Pagi hari (A.M.)", category: "Waktu", bab: "6-11" },
+      { kanji: "午後", reading: "ごご", romaji: "gogo", meaning: "Setelah siang / Sore hari (P.M.)", category: "Waktu", bab: "6-11" },
+      { kanji: "今週", reading: "こんしゅう", romaji: "konshuu", meaning: "Minggu ini", category: "Waktu", bab: "6-11" },
+      { kanji: "先週", reading: "せんしゅう", romaji: "senshuu", meaning: "Minggu lalu", category: "Waktu", bab: "6-11" },
+      { kanji: "今年", reading: "ことし", romaji: "kotoshi", meaning: "Tahun ini", category: "Waktu", bab: "6-11" },
+      { kanji: "今日", reading: "きょう", romaji: "kyou", meaning: "Hari ini", category: "Waktu", bab: "6-11" },
+      { kanji: "大きい", reading: "おおきい", romaji: "ookii", meaning: "Besar", category: "Kata Sifat", bab: "6-11" },
+      { kanji: "小さい", reading: "ちいさい", romaji: "chiisai", meaning: "Kecil", category: "Kata Sifat", bab: "6-11" },
+      { kanji: "高い", reading: "たかい", romaji: "takai", meaning: "Tinggi / Mahal", category: "Kata Sifat", bab: "6-11" },
+      { kanji: "安い", reading: "やすい", romaji: "yasui", meaning: "Murah", category: "Kata Sifat", bab: "6-11" },
+      { kanji: "新しい", reading: "あたらしい", romaji: "atarashii", meaning: "Baru", category: "Kata Sifat", bab: "6-11" },
+      { kanji: "古い", reading: "ふるい", romaji: "furui", meaning: "Lama / Kuno / Tua (benda)", category: "Kata Sifat", bab: "6-11" },
+      { kanji: "長い", reading: "ながい", romaji: "nagai", meaning: "Panjang", category: "Kata Sifat", bab: "6-11" },
+      { kanji: "多い", reading: "おおい", romaji: "ooi", meaning: "Banyak", category: "Kata Sifat", bab: "6-11" },
+      { kanji: "少ない", reading: "すくない", romaji: "sukunai", meaning: "Sedikit", category: "Kata Sifat", bab: "6-11" },
+      { kanji: "早い", reading: "はやい", romaji: "hayai", meaning: "Cepat / Pagi-pagi", category: "Kata Sifat", bab: "6-11" },
+      { kanji: "白い", reading: "しろい", romaji: "shiroi", meaning: "Putih", category: "Kata Sifat", bab: "6-11" },
+      { kanji: "行く", reading: "いく", romaji: "iku", meaning: "Pergi", category: "Kata Kerja", bab: "6-11" },
+      { kanji: "来る", reading: "くる", romaji: "kuru", meaning: "Datang", category: "Kata Kerja", bab: "6-11" },
+      { kanji: "食べる", reading: "たべる", romaji: "taberu", meaning: "Makan", category: "Kata Kerja", bab: "6-11" },
+      { kanji: "飲む", reading: "のむ", romaji: "nomu", meaning: "Minum", category: "Kata Kerja", bab: "6-11" },
+      { kanji: "見る", reading: "みる", romaji: "miru", meaning: "Melihat / Menonton", category: "Kata Kerja", bab: "6-11" },
+      { kanji: "入る", reading: "はいる", romaji: "hairu", meaning: "Masuk", category: "Kata Kerja", bab: "6-11" },
+      { kanji: "出る", reading: "でる", romaji: "deru", meaning: "Keluar", category: "Kata Kerja", bab: "6-11" },
+      { kanji: "立つ", reading: "たつ", romaji: "tatsu", meaning: "Berdiri", category: "Kata Kerja", bab: "6-11" },
+      { kanji: "書く", reading: "かく", romaji: "kaku", meaning: "Menulis", category: "Kata Kerja", bab: "6-11" },
+      { kanji: "言う", reading: "いう", romaji: "iu", meaning: "Berkata / Mengatakan", category: "Kata Kerja", bab: "6-11" },
+      { kanji: "話す", reading: "はなす", romaji: "hanasu", meaning: "Berbicara / Mengobrol", category: "Kata Kerja", bab: "6-11" },
+      { kanji: "読む", reading: "よむ", romaji: "yomu", meaning: "Membaca", category: "Kata Kerja", bab: "6-11" },
+      { kanji: "聞く", reading: "きく", romaji: "kiku", meaning: "Mendengar / Bertanya", category: "Kata Kerja", bab: "6-11" },
+      { kanji: "買う", reading: "かう", romaji: "kau", meaning: "Membeli", category: "Kata Kerja", bab: "6-11" },
+      { kanji: "休む", reading: "やすむ", romaji: "yasumu", meaning: "Beristirahat / Cuti / Libur", category: "Kata Kerja", bab: "6-11" },
+      { kanji: "会う", reading: "あう", romaji: "au", meaning: "Bertemu", category: "Kata Kerja", bab: "6-11" }
+    ];
+
+    /* =====================================================================
+       STATE MANAGEMENT
+       ===================================================================== */
+    let currentFilter = 'all';
+    let currentQuestion = null;
+    let answered = false;
+    let wrongPool = [];
+    let isReviewingWrong = false;
+
+    // Statistik Murid
+    let stats = {
+      total: 0,
+      correct: 0,
+      wrong: 0,
+      streak: 0
+    };
+
+    // Synthesized Sound Effects (Web Audio API)
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playSound(isCorrect) {
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (isCorrect) {
+        // Nada Cerah Naik (Do - Mi - Sol)
+        osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+        osc.frequency.exponentialRampToValueAtTime(783.99, audioCtx.currentTime + 0.18); // G5
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.25);
+      } else {
+        // Nada Turun Rendah (Salah)
+        osc.frequency.setValueAtTime(260, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(140, audioCtx.currentTime + 0.2);
+        gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.25);
+      }
+    }
+
+    /* TTS Audio Pengucapan Bahasa Jepang */
+    function playAudio() {
+      if (!currentQuestion) return;
+      const utterance = new SpeechSynthesisUtterance(currentQuestion.targetItem.kanji);
+      utterance.lang = 'ja-JP';
+      utterance.rate = 0.85; // Sedikit lebih lambat agar jelas didengar murid
+      window.speechSynthesis.speak(utterance);
+    }
+
+    /* =====================================================================
+       GENERATOR SOAL INTERAKTIF (4 OPSI & PENJELASAN SEMUA PILIHAN)
+       ===================================================================== */
+    function getRandomElements(arr, num, excludeItem) {
+      const filtered = arr.filter(item => item !== excludeItem);
+      const shuffled = [...filtered].sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, num);
+    }
+
+    function generateQuestion() {
+      let pool = VOCABULARY_DB;
+
+      if (isReviewingWrong && wrongPool.length > 0) {
+        pool = wrongPool;
+      } else if (currentFilter !== 'all') {
+        pool = VOCABULARY_DB.filter(item => item.bab === currentFilter);
+      }
+
+      if (pool.length === 0) {
+        alert("Tidak ada soal dalam kategori ini.");
+        setFilter('all', document.querySelector('[data-filter="all"]'));
+        return;
+      }
+
+      // Ambil 1 item target secara acak
+      const targetItem = pool[Math.floor(Math.random() * pool.length)];
+
+      // 3 Tipe Format Soal agar murid tidak bosan:
+      // 0: Kanji -> Cara Baca (Hiragana)
+      // 1: Kanji -> Arti Bahasa Indonesia
+      // 2: Arti -> Kanji
+      const questionTypes = ['reading', 'meaning', 'kanji_match'];
+      const qType = questionTypes[Math.floor(Math.random() * questionTypes.length)];
+
+      // Ambil 3 pengecoh (distractor)
+      // Usahakan mengambil pengecoh dari kategori yang mirip bila memungkinkan
+      let categoryMatches = VOCABULARY_DB.filter(x => x.category === targetItem.category && x.kanji !== targetItem.kanji);
+      let distractors = [];
+      if (categoryMatches.length >= 3) {
+        distractors = getRandomElements(categoryMatches, 3, targetItem);
+      } else {
+        distractors = getRandomElements(VOCABULARY_DB, 3, targetItem);
+      }
+
+      const allItems = [targetItem, ...distractors].sort(() => 0.5 - Math.random());
+
+      let promptTitle = "";
+      let targetDisplay = "";
+      let instructionText = "";
+
+      if (qType === 'reading') {
+        instructionText = "Bagaimana cara membaca kanji berikut?";
+        targetDisplay = targetItem.kanji;
+      } else if (qType === 'meaning') {
+        instructionText = "Apa arti bahasa Indonesia dari kata berikut?";
+        targetDisplay = targetItem.kanji;
+      } else {
+        instructionText = "Manakah kanji / kosakata yang memiliki arti berikut?";
+        targetDisplay = `"${targetItem.meaning}"`;
+      }
+
+      // Susun opsi & rincian penjelasan untuk masing-masing opsi
+      const options = allItems.map(item => {
+        const isCorrect = item.kanji === targetItem.kanji;
+        let displayText = "";
+
+        if (qType === 'reading') {
+          displayText = item.reading;
+        } else if (qType === 'meaning') {
+          displayText = item.meaning;
+        } else {
+          displayText = item.kanji;
+        }
+
+        // Susun penjelasan mendalam untuk opsi ini
+        let explanationText = "";
+        if (isCorrect) {
+          explanationText = `Tepat sekali! 「${item.kanji}」 dibaca "${item.reading}" (${item.romaji}) yang berarti "${item.meaning}".`;
+        } else {
+          if (qType === 'reading') {
+            explanationText = `Opsi ini adalah bacaan untuk kanji 「${item.kanji}」 (${item.meaning}), bukan untuk 「${targetItem.kanji}」.`;
+          } else if (qType === 'meaning') {
+            explanationText = `"${item.meaning}" adalah arti dari kanji 「${item.kanji}」 (${item.reading}), bukan 「${targetItem.kanji}」.`;
+          } else {
+            explanationText = `「${item.kanji}」 dibaca "${item.reading}" dan artinya adalah "${item.meaning}". Bukan "${targetItem.meaning}".`;
+          }
+        }
+
+        return {
+          item: item,
+          text: displayText,
+          isCorrect: isCorrect,
+          explanation: explanationText
+        };
+      });
+
+      return {
+        targetItem: targetItem,
+        type: qType,
+        instruction: instructionText,
+        promptText: targetDisplay,
+        options: options
+      };
+    }
+
+    /* =====================================================================
+       RENDER TAMPILAN
+       ===================================================================== */
+    function renderQuestion() {
+      answered = false;
+      currentQuestion = generateQuestion();
+
+      document.getElementById('itemCategory').textContent = `Kategori: ${currentQuestion.targetItem.category} (Bab ${currentQuestion.targetItem.bab})`;
+      document.getElementById('questionInstruction').textContent = currentQuestion.instruction;
+      document.getElementById('promptText').textContent = currentQuestion.promptText;
+
+      const grid = document.getElementById('optionsGrid');
+      grid.innerHTML = '';
+
+      const letters = ['A', 'B', 'C', 'D'];
+      currentQuestion.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'opt-btn';
+        btn.innerHTML = `
+          <div class="opt-idx">${letters[idx]}</div>
+          <div class="opt-text">${opt.text}</div>
+        `;
+        btn.onclick = () => handleAnswer(idx);
+        grid.appendChild(btn);
+      });
+
+      // Sembunyikan penjelasan sebelumnya
+      document.getElementById('explanationBox').style.display = 'none';
+    }
+
+    function handleAnswer(selectedIndex) {
+      if (answered) return;
+      answered = true;
+
+      const buttons = document.querySelectorAll('.opt-btn');
+      const selectedOption = currentQuestion.options[selectedIndex];
+      const isUserCorrect = selectedOption.isCorrect;
+
+      stats.total++;
+
+      if (isUserCorrect) {
+        stats.correct++;
+        stats.streak++;
+        playSound(true);
+
+        // Jika murid sedang mengulang soal yang salah dan benar, keluarkan dari wrongPool
+        if (isReviewingWrong) {
+          wrongPool = wrongPool.filter(item => item.kanji !== currentQuestion.targetItem.kanji);
+          updateWrongBadge();
+          if (wrongPool.length === 0) {
+            isReviewingWrong = false;
+            document.getElementById('reviewBanner').style.display = 'none';
+            document.getElementById('retryWrongBtn').style.display = 'none';
+          }
+        }
+      } else {
+        stats.wrong++;
+        stats.streak = 0;
+        playSound(false);
+
+        // Masukkan ke wrong pool bila belum ada
+        if (!wrongPool.some(x => x.kanji === currentQuestion.targetItem.kanji)) {
+          wrongPool.push(currentQuestion.targetItem);
+          updateWrongBadge();
+        }
+      }
+
+      updateStatsUI();
+
+      // Beri warna pada tiap tombol
+      buttons.forEach((btn, idx) => {
+        btn.disabled = true;
+        const opt = currentQuestion.options[idx];
+        if (opt.isCorrect) {
+          btn.classList.add('correct-choice');
+        } else if (idx === selectedIndex) {
+          btn.classList.add('wrong-choice');
+        }
+      });
+
+      // Tampilkan box penjelasan
+      showExplanation(isUserCorrect, selectedIndex);
+    }
+
+    function showExplanation(isUserCorrect, selectedIndex) {
+      const expBox = document.getElementById('explanationBox');
+      const statusTitle = document.getElementById('explanationStatus');
+      const expList = document.getElementById('explanationList');
+
+      expList.innerHTML = '';
+
+      if (isUserCorrect) {
+        statusTitle.innerHTML = `<span style="color:var(--success);">🎉 Jawaban Anda Benar!</span>`;
+      } else {
+        statusTitle.innerHTML = `<span style="color:var(--danger);">❌ Jawaban Kurang Tepat. Pelajari penjelasannya:</span>`;
+      }
+
+      const letters = ['A', 'B', 'C', 'D'];
+      currentQuestion.options.forEach((opt, idx) => {
+        const li = document.createElement('li');
+        li.className = `exp-item ${opt.isCorrect ? 'exp-correct' : 'exp-wrong'}`;
+
+        const marker = opt.isCorrect ? '✅ Jawaban Benar' : (idx === selectedIndex ? '⚠️ Pilihan Anda' : '❌ Opsi Pengecoh');
+
+        li.innerHTML = `
+          <div>
+            <strong>${letters[idx]}. ${opt.text}</strong> — <span style="font-size:0.85rem; font-weight:700;">${marker}</span>
+          </div>
+          <div class="exp-detail">
+            ${opt.explanation}
+          </div>
+        `;
+        expList.appendChild(li);
+      });
+
+      expBox.style.display = 'block';
+    }
+
+    function nextQuestion() {
+      renderQuestion();
+    }
+
+    /* =====================================================================
+       FILTER & WRONG REVIEW HANDLERS
+       ===================================================================== */
+    function setFilter(filter, el) {
+      currentFilter = filter;
+      isReviewingWrong = false;
+      document.getElementById('reviewBanner').style.display = 'none';
+
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      if (el) el.classList.add('active');
+
+      renderQuestion();
+    }
+
+    function toggleWrongReviewMode(el) {
+      if (wrongPool.length === 0) return;
+      isReviewingWrong = !isReviewingWrong;
+
+      const banner = document.getElementById('reviewBanner');
+      if (isReviewingWrong) {
+        banner.style.display = 'block';
+        el.textContent = `Keluar Mode Salah (${wrongPool.length})`;
+      } else {
+        banner.style.display = 'none';
+        el.textContent = `Ulangi yang Salah (${wrongPool.length})`;
+      }
+      renderQuestion();
+    }
+
+    function updateWrongBadge() {
+      const btn = document.getElementById('retryWrongBtn');
+      const badge = document.getElementById('wrongCountBadge');
+      badge.textContent = wrongPool.length;
+
+      if (wrongPool.length > 0) {
+        btn.style.display = 'inline-block';
+      } else {
+        btn.style.display = 'none';
+      }
+    }
+
+    function updateStatsUI() {
+      document.getElementById('totalCount').textContent = stats.total;
+      document.getElementById('correctCount').textContent = stats.correct;
+      document.getElementById('wrongCount').textContent = stats.wrong;
+      document.getElementById('streakCount').textContent = `${stats.streak} 🔥`;
+    }
+
+    // Keyboard Shortcut (Tombol 1, 2, 3, 4 atau A, B, C, D dan Space/Enter untuk Next)
+    document.addEventListener('keydown', (e) => {
+      if (!answered) {
+        if (['1', 'a', 'A'].includes(e.key)) handleAnswer(0);
+        if (['2', 'b', 'B'].includes(e.key)) handleAnswer(1);
+        if (['3', 'c', 'C'].includes(e.key)) handleAnswer(2);
+        if (['4', 'd', 'D'].includes(e.key)) handleAnswer(3);
+      } else {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          nextQuestion();
+        }
+      }
+    });
+
+    // Inisialisasi awal saat halaman dimuat
+    window.onload = () => {
+      renderQuestion();
+    };
+  </script>
+</body>
+</html>

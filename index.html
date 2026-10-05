@@ -9,20 +9,65 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@500;700;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --qz-blue: #4255ff;
-      --qz-blue-hover: #3142e6;
-      --qz-blue-light: #ebedff;
+      --qz-blue: #5b6cff;
+      --qz-blue-hover: #4859f5;
+      --qz-green: #23b26d;
+      --qz-red: #ff5442;
+      --qz-yellow: #ffcd1f;
+      --font-jp: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+    }
+
+    /* =========================================================================
+       THEME VARIABLES (DARK IS DEFAULT)
+       ========================================================================= */
+    body.theme-dark {
+      --qz-bg: #0c101c;
+      --qz-nav-bg: #141a2b;
+      --qz-card: #1c243b;
+      --qz-card-back: #181f33;
+      --qz-border: #283452;
+      --qz-border-hover: #5b6cff;
+      --qz-dark: #f8fafc;
+      --qz-gray: #94a3b8;
+      --qz-light-gray: #141a2b;
+      --qz-blue-light: rgba(91, 108, 255, 0.18);
+      --qz-blue-text: #9bb0ff;
+      --qz-green-bg: rgba(35, 178, 109, 0.18);
+      --qz-green-text: #86efac;
+      --qz-red-bg: rgba(255, 84, 66, 0.18);
+      --qz-red-text: #fca5a5;
+      --qz-kbd-bg: #222c44;
+      --qz-kbd-color: #cbd5e1;
+      --qz-track-bg: #222c44;
+      --qz-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      --qz-streak-bg: rgba(234, 88, 12, 0.16);
+      --qz-streak-text: #fdba74;
+      --qz-streak-border: rgba(234, 88, 12, 0.3);
+    }
+
+    body.theme-light {
+      --qz-bg: #f6f7fb;
+      --qz-nav-bg: #ffffff;
+      --qz-card: #ffffff;
+      --qz-card-back: #fafbff;
+      --qz-border: #e2e8f0;
+      --qz-border-hover: #5b6cff;
       --qz-dark: #1a1d28;
       --qz-gray: #586380;
       --qz-light-gray: #f6f7fb;
-      --qz-border: #e2e8f0;
-      --qz-card: #ffffff;
-      --qz-green: #23b26d;
+      --qz-blue-light: #ebedff;
+      --qz-blue-text: #4255ff;
       --qz-green-bg: #eefbf3;
-      --qz-red: #ff5442;
+      --qz-green-text: #14532d;
       --qz-red-bg: #fff0ee;
-      --qz-yellow: #ffcd1f;
-      --font-jp: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+      --qz-red-text: #7f1d1d;
+      --qz-kbd-bg: #e2e8f0;
+      --qz-kbd-color: #334155;
+      --qz-track-bg: #e2e8f0;
+      --qz-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      --qz-streak-bg: #fff7ed;
+      --qz-streak-text: #ea580c;
+      --qz-streak-border: #ffedd5;
     }
 
     * {
@@ -31,10 +76,11 @@
       padding: 0;
       font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
       -webkit-tap-highlight-color: transparent;
+      transition: background-color 0.25s ease, border-color 0.25s ease, color 0.2s ease;
     }
 
     body {
-      background-color: var(--qz-light-gray);
+      background-color: var(--qz-bg);
       color: var(--qz-dark);
       min-height: 100vh;
       display: flex;
@@ -45,7 +91,7 @@
     /* Top Navigation */
     nav.navbar {
       width: 100%;
-      background: var(--qz-card);
+      background: var(--qz-nav-bg);
       border-bottom: 1px solid var(--qz-border);
       padding: 12px 24px;
       display: flex;
@@ -80,6 +126,7 @@
     .mode-tabs {
       display: flex;
       background: var(--qz-light-gray);
+      border: 1px solid var(--qz-border);
       padding: 4px;
       border-radius: 12px;
       gap: 4px;
@@ -106,8 +153,35 @@
 
     .tab-btn.active {
       background: var(--qz-card);
-      color: var(--qz-blue);
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+      color: var(--qz-blue-text);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Nav Actions (Theme Toggle & Sound) */
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .theme-toggle-btn {
+      background: var(--qz-card);
+      border: 1px solid var(--qz-border);
+      color: var(--qz-dark);
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle-btn:hover {
+      border-color: var(--qz-blue);
+      transform: scale(1.03);
     }
 
     /* Main Container */
@@ -152,12 +226,12 @@
 
     .pill-btn:hover {
       border-color: var(--qz-blue);
-      color: var(--qz-blue);
+      color: var(--qz-blue-text);
     }
 
     .pill-btn.active {
       background: var(--qz-dark);
-      color: #fff;
+      color: var(--qz-bg);
       border-color: var(--qz-dark);
     }
 
@@ -188,7 +262,7 @@
     .fc-progress-track {
       width: 100%;
       height: 6px;
-      background: #e2e8f0;
+      background: var(--qz-track-bg);
       border-radius: 999px;
       overflow: hidden;
       margin-bottom: 20px;
@@ -234,23 +308,21 @@
       background: var(--qz-card);
       border-radius: 24px;
       border: 1.5px solid var(--qz-border);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      box-shadow: var(--qz-shadow);
       padding: 24px 28px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
-      transition: box-shadow 0.2s ease, border-color 0.2s ease;
     }
 
     .flashcard-wrapper:hover .card-face {
-      box-shadow: 0 14px 40px rgba(66, 85, 255, 0.1);
-      border-color: #cbd5e1;
+      border-color: var(--qz-border-hover);
     }
 
     .card-face-back {
       transform: rotateY(180deg);
-      background: #fbfbfe;
+      background: var(--qz-card-back);
     }
 
     .card-top-row {
@@ -262,11 +334,12 @@
 
     .category-chip {
       background: var(--qz-blue-light);
-      color: var(--qz-blue);
+      color: var(--qz-blue-text);
       padding: 4px 12px;
       border-radius: 999px;
       font-size: 0.78rem;
       font-weight: 700;
+      border: 1px solid var(--qz-border);
     }
 
     .icon-action-btn {
@@ -313,7 +386,7 @@
       font-family: var(--font-jp);
       font-size: 2.2rem;
       font-weight: 700;
-      color: var(--qz-blue);
+      color: var(--qz-blue-text);
       margin-bottom: 2px;
     }
 
@@ -333,7 +406,7 @@
 
     .card-hint {
       font-size: 0.8rem;
-      color: #94a3b8;
+      color: var(--qz-gray);
       font-weight: 600;
       display: flex;
       align-items: center;
@@ -363,12 +436,12 @@
       cursor: pointer;
       color: var(--qz-dark);
       transition: all 0.2s ease;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     .circle-btn:hover:not(:disabled) {
       border-color: var(--qz-blue);
-      color: var(--qz-blue);
+      color: var(--qz-blue-text);
       transform: scale(1.05);
     }
 
@@ -389,13 +462,13 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       transition: all 0.2s ease;
     }
 
     .flip-btn-pill:hover {
       border-color: var(--qz-blue);
-      color: var(--qz-blue);
+      color: var(--qz-blue-text);
     }
 
     .shuffle-btn {
@@ -416,7 +489,7 @@
     .shuffle-btn.active {
       background: var(--qz-blue-light);
       border-color: var(--qz-blue);
-      color: var(--qz-blue);
+      color: var(--qz-blue-text);
     }
 
     .keyboard-hint {
@@ -427,8 +500,9 @@
     }
 
     kbd {
-      background: #e2e8f0;
-      color: #334155;
+      background: var(--qz-kbd-bg);
+      color: var(--qz-kbd-color);
+      border: 1px solid var(--qz-border);
       padding: 2px 6px;
       border-radius: 4px;
       font-size: 0.72rem;
@@ -460,11 +534,11 @@
       gap: 4px;
       font-weight: 800;
       font-size: 0.9rem;
-      color: #ea580c;
-      background: #fff7ed;
+      color: var(--qz-streak-text);
+      background: var(--qz-streak-bg);
       padding: 4px 10px;
       border-radius: 999px;
-      border: 1px solid #ffedd5;
+      border: 1px solid var(--qz-streak-border);
     }
 
     .score-badge {
@@ -480,7 +554,7 @@
       border: 1.5px solid var(--qz-border);
       padding: 28px 24px;
       text-align: center;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+      box-shadow: var(--qz-shadow);
       margin-bottom: 18px;
       position: relative;
     }
@@ -533,12 +607,12 @@
       font-weight: 600;
       color: var(--qz-dark);
       transition: all 0.18s ease;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     }
 
     .quiz-option:hover:not(:disabled) {
       border-color: var(--qz-blue);
-      background: #fafbff;
+      background: var(--qz-card-back);
       transform: translateY(-2px);
     }
 
@@ -546,7 +620,7 @@
       width: 28px;
       height: 28px;
       border-radius: 8px;
-      background: var(--qz-light-gray);
+      background: var(--qz-track-bg);
       border: 1px solid var(--qz-border);
       color: var(--qz-gray);
       font-size: 0.8rem;
@@ -560,7 +634,7 @@
 
     .quiz-option:hover:not(:disabled) .opt-key {
       background: var(--qz-blue-light);
-      color: var(--qz-blue);
+      color: var(--qz-blue-text);
       border-color: var(--qz-blue);
     }
 
@@ -568,7 +642,7 @@
     .quiz-option.opt-correct {
       border-color: var(--qz-green) !important;
       background: var(--qz-green-bg) !important;
-      color: #14532d !important;
+      color: var(--qz-green-text) !important;
     }
 
     .quiz-option.opt-correct .opt-key {
@@ -580,7 +654,7 @@
     .quiz-option.opt-wrong {
       border-color: var(--qz-red) !important;
       background: var(--qz-red-bg) !important;
-      color: #7f1d1d !important;
+      color: var(--qz-red-text) !important;
     }
 
     .quiz-option.opt-wrong .opt-key {
@@ -596,7 +670,7 @@
       border-radius: 16px;
       border: 1px solid var(--qz-border);
       padding: 18px 20px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      box-shadow: var(--qz-shadow);
       display: none;
       animation: fadeIn 0.25s ease;
     }
@@ -665,7 +739,7 @@
 
     .search-box:focus {
       border-color: var(--qz-blue);
-      box-shadow: 0 0 0 3px rgba(66, 85, 255, 0.12);
+      box-shadow: 0 0 0 3px var(--qz-blue-light);
     }
 
     .vocab-grid {
@@ -689,7 +763,7 @@
     .vocab-card:hover {
       border-color: var(--qz-blue);
       transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+      box-shadow: var(--qz-shadow);
     }
 
     .vocab-card-top {
@@ -709,7 +783,7 @@
       font-family: var(--font-jp);
       font-size: 1rem;
       font-weight: 700;
-      color: var(--qz-blue);
+      color: var(--qz-blue-text);
     }
 
     .vc-romaji {
@@ -724,15 +798,31 @@
       margin-top: 4px;
     }
 
+    .mobile-only {
+      display: none !important;
+    }
+    .desktop-only {
+      display: inline-flex !important;
+    }
+
     /* Responsive */
-    @media (max-width: 600px) {
+    @media (max-width: 650px) {
+      .mobile-only {
+        display: inline-flex !important;
+      }
+      .desktop-only {
+        display: none !important;
+      }
       nav.navbar {
         padding: 10px 14px;
         flex-direction: column;
         gap: 10px;
       }
-      .brand {
-        align-self: flex-start;
+      .brand-row {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
       }
       .mode-tabs {
         width: 100%;
@@ -756,13 +846,19 @@
     }
   </style>
 </head>
-<body>
+<body class="theme-dark">
 
   <!-- Top Navbar -->
   <nav class="navbar">
-    <div class="brand" onclick="switchMode('flashcard')">
-      <span>🎴 JLPT N5 Kanji</span>
-      <span class="brand-badge">Bab 1–11</span>
+    <div class="brand-row">
+      <div class="brand" onclick="switchMode('flashcard')">
+        <span>🎴 JLPT N5 Kanji</span>
+        <span class="brand-badge">Bab 1–11</span>
+      </div>
+      <!-- Theme Toggle on Mobile Header -->
+      <button class="theme-toggle-btn mobile-only" onclick="toggleTheme()" title="Ganti Mode Gelap / Terang">
+        <span class="theme-icon">🌙</span> <span class="theme-label">Gelap</span>
+      </button>
     </div>
 
     <!-- Mode Tabs -->
@@ -775,6 +871,13 @@
       </button>
       <button class="tab-btn" id="tab-list" onclick="switchMode('list')">
         📖 Daftar Kanji
+      </button>
+    </div>
+
+    <!-- Nav Actions (Desktop Theme Toggle) -->
+    <div class="nav-actions desktop-only">
+      <button class="theme-toggle-btn" onclick="toggleTheme()" title="Ganti Mode Gelap / Terang">
+        <span class="theme-icon">🌙</span> <span class="theme-label">Gelap</span>
       </button>
     </div>
   </nav>
@@ -1766,6 +1869,29 @@
   }
 ];
 
+    /* THEME MANAGEMENT (DEFAULT: DARK MODE) */
+    let currentTheme = 'dark'; // Always default to dark mode
+
+    function applyTheme(theme) {
+      currentTheme = theme;
+      document.body.classList.remove('theme-dark', 'theme-light');
+      document.body.classList.add(theme === 'dark' ? 'theme-dark' : 'theme-light');
+      
+      const icons = document.querySelectorAll('.theme-icon');
+      const labels = document.querySelectorAll('.theme-label');
+      
+      icons.forEach(icon => {
+        icon.textContent = (theme === 'dark') ? '🌙' : '☀️';
+      });
+      labels.forEach(label => {
+        label.textContent = (theme === 'dark') ? 'Gelap' : 'Terang';
+      });
+    }
+
+    function toggleTheme() {
+      applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+    }
+
     /* STATE */
     let currentMode = 'flashcard';
     let currentFilter = 'all';
@@ -2175,7 +2301,8 @@
       }
     }, { passive: true });
 
-    // Initial Start
+    // Initial Start: Always Dark Mode by Default!
+    applyTheme('dark');
     applyFilterToPool();
     renderFlashcard();
   </script>
